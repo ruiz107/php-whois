@@ -8,9 +8,9 @@ PHP class to retrieve WHOIS information.
 
 <?php
 
-$sld = 'reg.ru';
+$domain = 'uol.com.br';
 
-$whois = new Phois\Whois\Whois($sld);
+$whois = new Phois\Whois\Whois($domain);
 
 $whois_answer = $whois->info();
 $nsServers = $whois->getNsServers();
