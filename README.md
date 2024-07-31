@@ -1,4 +1,4 @@
-# php-whois (UNMAINTAINED)
+# php-whois
 
 PHP class to retrieve WHOIS information.
 
@@ -10,13 +10,14 @@ PHP class to retrieve WHOIS information.
 
 $sld = 'reg.ru';
 
-$domain = new Phois\Whois\Whois($sld);
+$whois = new Phois\Whois\Whois($sld);
 
-$whois_answer = $domain->info();
+$whois_answer = $whois->info();
+$nsServers = $whois->getNsServers();
 
 echo $whois_answer;
 
-if ($domain->isAvailable()) {
+if ($whois->isAvailable()) {
     echo "Domain is available\n";
 } else {
     echo "Domain is registered\n";
