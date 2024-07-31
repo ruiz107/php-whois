@@ -166,15 +166,17 @@ class Whois
     
     /**
      * @return string return the ns servers from the whois response
-     * TODo - only compatible with whois.nic.br
+     * TODO - only compatible with whois.nic.br
      */
     public function getNsServers()
     {
         if(!isset($this->whoisResponse) OR $this->whoisResponse == false) {
             return false;
         }
+
         // get nsservers and ips (whois.nic.br only!)
-        preg_match_all('/(nserver:\s+)([0-9a-z.]+)(\s+)([0-9.]+)/', $this->whoisResponse, $matches);
+        //preg_match_all('/(nserver:\s+)([0-9a-z.]+)(\s+)([0-9.]+)/', $this->whoisResponse, $matches);
+        preg_match_all('/(nserver:\s+)([0-9a-zA-Z.-]+)/', $this->whoisResponse, $matches);
         if(isset($matches[2]) AND is_array($matches[2])) {
             return $matches[2];
         } else {
