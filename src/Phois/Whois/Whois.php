@@ -5,12 +5,10 @@ namespace Phois\Whois;
 class Whois
 {
     private $domain;
-
     private $TLDs;
-
     private $subDomain;
-
     private $servers;
+    private $whoisResponse;
 
     /**
      * @param string $domain full domain name (without trailing dot)
@@ -112,15 +110,19 @@ class Whois
                     }
                     fclose($fp);
                 }
+                
 
                 $string_encoding = mb_detect_encoding($string, "UTF-8, ISO-8859-1, ISO-8859-15", true);
                 $string_utf8 = mb_convert_encoding($string, "UTF-8", $string_encoding);
 
-                return htmlspecialchars($string_utf8, ENT_COMPAT, "UTF-8", true);
+                $this->whoisResponse = htmlspecialchars($string_utf8, ENT_COMPAT, "UTF-8", true);
+                return $this->whoisResponse;
             } else {
+                $this->whoisResponse = false;
                 return "No whois server for this tld in list!";
             }
         } else {
+            $this->whoisResponse = false;
             return "Domain name isn't valid!";
         }
     }
@@ -152,6 +154,32 @@ class Whois
     public function getSubDomain()
     {
         return $this->subDomain;
+    }
+    
+    /**
+     * @return string return whois response
+     */
+    public function getWhoisResponse()
+    {
+        return $this->whoisResponse;
+    }
+    
+    /**
+     * @return string return the ns servers from the whois response
+     * TODo - only compatible with whois.nic.br
+     */
+    public function getNsServers()
+    {
+        if(!isset($this->whoisResponse) OR $this->whoisResponse == false) {
+            return false;
+        }
+        // get nsservers and ips (whois.nic.br only!)
+        preg_match_all('/(nserver:\s+)([0-9a-z.]+)(\s+)([0-9.]+)/', $this->whoisResponse, $matches);
+        if(isset($matches[2]) AND is_array($matches[2])) {
+            return $matches[2];
+        } else {
+            return false;
+        }
     }
 
     public function isAvailable()
